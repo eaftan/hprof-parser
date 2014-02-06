@@ -9,13 +9,15 @@ http://blogs.sun.com/kto/resource/manual.html (older documentation)
 $JVM/demo/jvmti/hprof/src/manual.html (if you have the Sun JDK installed)
 
 The main functionality is in the HprofParser.java file, which parses the heap 
-dump file and calls a method in the associated handler class for each record 
-parsed.  The handler is meant to be subclassed and extended to perform whatever 
-analysis you like.  The handler must be a subclass of RecordHandler, which
-is a null handler (it does nothing for all records).  I provide an example
-subclass, PrintHandler, which simply prints the data from each record.  To 
-change to a different handler class, simply modify which handler is passed
-to the HprofParser constructor in HprofParser.main.
+dump file and calls a method in the associated RecordHandler for each record 
+parsed.  The RecordHandler interface is meant to be implemented to perform 
+whatever analysis you like.  I recommend subclassing NullRecordHandler, which
+does nothing for all records, and overriding only the methods for the record
+types you are interested in.  By default, the Parse program uses the example
+PrintHandler, which simply prints the data from each record.  To change to a 
+different handler class, simply pass the command line option
+"--handler=<classname>" to Parse, where classname is the fully-qualified
+class name of the handler class.
 
 I provide a sample heap dump from Dacapo antlr in the file java.hprof.
 
@@ -23,10 +25,10 @@ The build uses Maven (http://maven.apache.org/).  You can build it with the
 following command:
 $ maven compile
 
-To produce a binary heap dump from the Sun JVM, use the following command:
+To produce a binary heap dump from the Oracle JVM, use the following command:
 java -agentlib:hprof=heap=dump,format=b ToBeProfiledClass
 
-This will dump the heap at the end of program execution.  See the Sun 
+This will dump the heap at the end of program execution.  See the 
 documentation referenced above to see how to produce heap dumps at other 
 points in program execution.
 

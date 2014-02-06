@@ -17,6 +17,7 @@
 package edu.tufts.eaftan.hprofparser.parser;
 
 import edu.tufts.eaftan.hprofparser.handler.RecordHandler;
+
 import edu.tufts.eaftan.hprofparser.parser.datastructures.AllocSite;
 import edu.tufts.eaftan.hprofparser.parser.datastructures.CPUSample;
 import edu.tufts.eaftan.hprofparser.parser.datastructures.ClassInfo;

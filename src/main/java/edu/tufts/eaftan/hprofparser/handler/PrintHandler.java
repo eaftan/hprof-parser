@@ -31,7 +31,7 @@ import java.util.HashMap;
 /**
  * Prints details for each record encountered.
  */
-public class PrintHandler extends RecordHandler {
+public class PrintHandler extends NullRecordHandler {
 
   private HashMap<Long, String> stringMap = new HashMap<Long, String>();
   private HashMap<Long, ClassInfo> classMap = new HashMap<Long, ClassInfo>();

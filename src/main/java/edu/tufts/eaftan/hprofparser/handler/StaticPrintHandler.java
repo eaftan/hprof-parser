@@ -24,7 +24,7 @@ import edu.tufts.eaftan.hprofparser.parser.datastructures.Type;
 
 import java.util.HashMap;
 
-public class StaticPrintHandler extends RecordHandler {
+public class StaticPrintHandler extends NullRecordHandler {
   
   private HashMap<Long, String> stringMap = new HashMap<Long, String>();
   private HashMap<Long, ClassInfo> classMap = new HashMap<Long, ClassInfo>();
