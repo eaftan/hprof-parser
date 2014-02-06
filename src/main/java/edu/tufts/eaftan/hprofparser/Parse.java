@@ -34,15 +34,14 @@ package edu.tufts.eaftan.hprofparser;
 
 import com.google.common.collect.Lists;
 
-import edu.tufts.eaftan.hprofparser.handler.RecordHandler;
 import edu.tufts.eaftan.hprofparser.handler.PrintHandler;
+import edu.tufts.eaftan.hprofparser.handler.RecordHandler;
 import edu.tufts.eaftan.hprofparser.parser.HprofParser;
 
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Parse {
