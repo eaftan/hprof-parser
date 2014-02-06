@@ -30,3 +30,6 @@ java -agentlib:hprof=heap=dump,format=b ToBeProfiledClass
 This will dump the heap at the end of program execution.  See the Sun 
 documentation referenced above to see how to produce heap dumps at other 
 points in program execution.
+
+This code is released under the Apache 2.0 license.  See the LICENSE file in
+this directory for details.
