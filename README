@@ -1,6 +1,5 @@
 Hprof Heap Dump parser
 Eddie Aftandilian (eaftan@cs.tufts.edu)
-10/26/2010
 
 This is the source code for a parser for Hprof heap dump files that can
 be produced by various JVMs.  This code parses the binary format of these
