@@ -1,7 +1,10 @@
-import java.io.*;
-import parser.HprofParser;
-import handler.*;
+package edu.tufts.eaftan.hprofparser;
+import edu.tufts.eaftan.hprofparser.parser.HprofParser;
 
+import edu.tufts.eaftan.hprofparser.handler.PrintHandler;
+import edu.tufts.eaftan.hprofparser.handler.RecordHandler;
+
+import java.io.*;
 
 public class Parse {
 

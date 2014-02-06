@@ -8,9 +8,14 @@
  * This base class does nothing for any record.
  * **************************************************************************/
 
-package handler;
+package edu.tufts.eaftan.hprofparser.handler;
 
-import parser.datastructures.*;
+import edu.tufts.eaftan.hprofparser.parser.datastructures.AllocSite;
+import edu.tufts.eaftan.hprofparser.parser.datastructures.CPUSample;
+import edu.tufts.eaftan.hprofparser.parser.datastructures.Constant;
+import edu.tufts.eaftan.hprofparser.parser.datastructures.InstanceField;
+import edu.tufts.eaftan.hprofparser.parser.datastructures.Static;
+import edu.tufts.eaftan.hprofparser.parser.datastructures.Value;
 
 public class RecordHandler {
 

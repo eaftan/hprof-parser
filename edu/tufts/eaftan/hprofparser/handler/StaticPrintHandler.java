@@ -1,16 +1,17 @@
-package handler;
+package edu.tufts.eaftan.hprofparser.handler;
 
-import handler.summarizehandler.Class;
+import edu.tufts.eaftan.hprofparser.parser.datastructures.ClassInfo;
+import edu.tufts.eaftan.hprofparser.parser.datastructures.Constant;
+import edu.tufts.eaftan.hprofparser.parser.datastructures.InstanceField;
+import edu.tufts.eaftan.hprofparser.parser.datastructures.Static;
+import edu.tufts.eaftan.hprofparser.parser.datastructures.Type;
+
 import java.util.HashMap;
-import parser.datastructures.Constant;
-import parser.datastructures.InstanceField;
-import parser.datastructures.Static;
-import parser.datastructures.Type;
 
 public class StaticPrintHandler extends RecordHandler {
   
   private HashMap<Long, String> stringMap = new HashMap<Long, String>();
-  private HashMap<Long, Class> classMap = new HashMap<Long, Class>();
+  private HashMap<Long, ClassInfo> classMap = new HashMap<Long, ClassInfo>();
   
   public void stringInUTF8(long id, String data) {
     // store string for later lookup
@@ -19,7 +20,7 @@ public class StaticPrintHandler extends RecordHandler {
   
   public void loadClass(int classSerialNum, long classObjId, 
       int stackTraceSerialNum, long classNameStringId) {
-    Class cls = new Class();
+    ClassInfo cls = new ClassInfo();
     cls.classObjId = classObjId;
     cls.className = stringMap.get(classNameStringId);
     classMap.put(classObjId, cls);
@@ -31,7 +32,7 @@ public class StaticPrintHandler extends RecordHandler {
       int instanceSize, Constant[] constants, Static[] statics,
       InstanceField[] instanceFields) {
     
-    Class cls = classMap.get(classObjId);
+    ClassInfo cls = classMap.get(classObjId);
     if (cls == null) {
       System.err.println("Error: Could not find class " + classObjId + " from classdump");
       System.exit(1);

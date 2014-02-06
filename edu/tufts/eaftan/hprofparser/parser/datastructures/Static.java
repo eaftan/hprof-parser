@@ -1,4 +1,4 @@
-package parser.datastructures;
+package edu.tufts.eaftan.hprofparser.parser.datastructures;
 
 public class Static {
 

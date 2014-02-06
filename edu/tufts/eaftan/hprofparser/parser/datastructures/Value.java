@@ -3,7 +3,7 @@
  * of many possible types.
  ***************************************************************************/
 
-package parser.datastructures;
+package edu.tufts.eaftan.hprofparser.parser.datastructures;
 
 public class Value {
 

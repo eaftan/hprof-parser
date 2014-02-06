@@ -5,13 +5,23 @@
  * file:///home/eaftan/jvmti-demos/hprof/src/manual.html
  ****************************************************************************/
 
-package parser;
+package edu.tufts.eaftan.hprofparser.parser;
+
+import edu.tufts.eaftan.hprofparser.parser.datastructures.AllocSite;
+import edu.tufts.eaftan.hprofparser.parser.datastructures.CPUSample;
+import edu.tufts.eaftan.hprofparser.parser.datastructures.ClassInfo;
+import edu.tufts.eaftan.hprofparser.parser.datastructures.Constant;
+import edu.tufts.eaftan.hprofparser.parser.datastructures.Instance;
+import edu.tufts.eaftan.hprofparser.parser.datastructures.InstanceField;
+import edu.tufts.eaftan.hprofparser.parser.datastructures.Static;
+import edu.tufts.eaftan.hprofparser.parser.datastructures.Type;
+import edu.tufts.eaftan.hprofparser.parser.datastructures.Value;
+
+import edu.tufts.eaftan.hprofparser.handler.RecordHandler;
 
 import java.io.*;
 import java.util.HashMap;
 import java.util.ArrayList;
-import parser.datastructures.*;
-import handler.*;
 
 public class HprofParser {
 
@@ -517,7 +527,7 @@ public class HprofParser {
          * its superclasses.  So we need to store class records in a hash 
          * table.
          */
-        classMap.put(l1, new ClassInfo(l1, l2, i2, instanceFields));
+        classMap.put(l1, new ClassInfo(l1, l2, i2, instanceFields, null));
 
         handler.classDump(l1, i1, l2, l3, l4, l5, l6, l7, i2, constants,
             statics, instanceFields); 

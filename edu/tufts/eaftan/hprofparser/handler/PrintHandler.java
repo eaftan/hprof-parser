@@ -8,12 +8,19 @@
  * This derived class prints details for each record encountered.
  * **************************************************************************/
 
-package handler;
+package edu.tufts.eaftan.hprofparser.handler;
+
+import edu.tufts.eaftan.hprofparser.parser.datastructures.AllocSite;
+import edu.tufts.eaftan.hprofparser.parser.datastructures.CPUSample;
+import edu.tufts.eaftan.hprofparser.parser.datastructures.ClassInfo;
+import edu.tufts.eaftan.hprofparser.parser.datastructures.Constant;
+import edu.tufts.eaftan.hprofparser.parser.datastructures.InstanceField;
+import edu.tufts.eaftan.hprofparser.parser.datastructures.Static;
+import edu.tufts.eaftan.hprofparser.parser.datastructures.Value;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
-import parser.datastructures.*;
 
 public class PrintHandler extends RecordHandler {
 
@@ -284,7 +291,7 @@ public class PrintHandler extends RecordHandler {
     
     // store class info in a hashmap for later access
     classMap.put(classObjId, new ClassInfo(classObjId, superClassObjId, instanceSize,
-        instanceFields));
+        instanceFields, null));
   }
 
   public void instanceDump(long objId, int stackTraceSerialNum, 
