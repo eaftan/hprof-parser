@@ -32,6 +32,8 @@
 
 package edu.tufts.eaftan.hprofparser;
 
+import com.google.common.collect.Lists;
+
 import edu.tufts.eaftan.hprofparser.handler.RecordHandler;
 import edu.tufts.eaftan.hprofparser.handler.PrintHandler;
 import edu.tufts.eaftan.hprofparser.parser.HprofParser;
@@ -40,26 +42,32 @@ import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Parse {
   
   private static final Class<? extends RecordHandler> DEFAULT_HANDLER = PrintHandler.class; 
 
   public static void main(String[] args) {
+    
+    List<String> argList = Lists.newArrayList(args);
 
-    if (args.length < 1) {
+    if (argList.size() < 1) {
       System.out.println("Usage: java Parse [--handler=<handler class>] inputfile");
       System.exit(1);
     }
     
     Class<? extends RecordHandler> handlerClass = DEFAULT_HANDLER;
-    if (args[0].startsWith("--handler=")) {
-      String handlerClassName = args[0].substring("--handler=".length());
-      try {
-        handlerClass = (Class<? extends RecordHandler>) Class.forName(handlerClassName);
-      } catch (ClassNotFoundException e) {
-        System.err.println("Could not find class " + handlerClassName);
-        System.exit(1);
+    for (String arg : argList) {
+      if (arg.startsWith("--handler=")) {
+        String handlerClassName = arg.substring("--handler=".length());
+        try {
+          handlerClass = (Class<? extends RecordHandler>) Class.forName(handlerClassName);
+        } catch (ClassNotFoundException e) {
+          System.err.println("Could not find class " + handlerClassName);
+          System.exit(1);
+        }
       }
     }
 
@@ -73,7 +81,7 @@ public class Parse {
     HprofParser parser = new HprofParser(handler);
 
     try {
-      FileInputStream fs = new FileInputStream(args[0]);
+      FileInputStream fs = new FileInputStream(argList.get(argList.size() - 1));
       DataInputStream in = new DataInputStream(new BufferedInputStream(fs));
 
       parser.parse(in);
