@@ -1,0 +1,32 @@
+Hprof Heap Dump parser
+Eddie Aftandilian (eaftan@cs.tufts.edu)
+10/26/2010
+
+This is the source code for a parser for Hprof heap dump files that can
+be produced by various JVMs.  This code parses the binary format of these
+files.  Documentation on the file format and the meanings of the different
+record types can be found here:
+http://blogs.sun.com/kto/resource/manual.html (older documentation)
+$JVM/demo/jvmti/hprof/src/manual.html (if you have the Sun JDK installed)
+
+The main functionality is in the HprofParser.java file, which parses the heap 
+dump file and calls a method in the associated handler class for each record 
+parsed.  The handler is meant to be subclassed and extended to perform whatever 
+analysis you like.  The handler must be a subclass of RecordHandler, which
+is a null handler (it does nothing for all records).  I provide an example
+subclass, PrintHandler, which simply prints the data from each record.  To 
+change to a different handler class, simply modify which handler is passed
+to the HprofParser constructor in HprofParser.main.
+
+I provide a sample heap dump from Dacapo antlr in the file java.hprof.
+
+The code can be run with the following commands:
+% javac *.java
+% java Hprof java.hprof
+
+To produce a binary heap dump from the Sun JVM, use the following command:
+java -agentlib:hprof=heap=dump,format=b ToBeProfiledClass
+
+This will dump the heap at the end of program execution.  See the Sun 
+documentation referenced above to see how to produce heap dumps at other 
+points in program execution.
