@@ -16,6 +16,7 @@
 
 package edu.tufts.eaftan.hprofparser.parser;
 
+import edu.tufts.eaftan.hprofparser.handler.RecordHandler;
 import edu.tufts.eaftan.hprofparser.parser.datastructures.AllocSite;
 import edu.tufts.eaftan.hprofparser.parser.datastructures.CPUSample;
 import edu.tufts.eaftan.hprofparser.parser.datastructures.ClassInfo;
@@ -26,11 +27,13 @@ import edu.tufts.eaftan.hprofparser.parser.datastructures.Static;
 import edu.tufts.eaftan.hprofparser.parser.datastructures.Type;
 import edu.tufts.eaftan.hprofparser.parser.datastructures.Value;
 
-import edu.tufts.eaftan.hprofparser.handler.RecordHandler;
-
-import java.io.*;
-import java.util.HashMap;
+import java.io.ByteArrayInputStream;
+import java.io.DataInput;
+import java.io.DataInputStream;
+import java.io.EOFException;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Parses an hprof heap dump file in binary format.  The hprof dump file format is documented in
