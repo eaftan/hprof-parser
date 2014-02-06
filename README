@@ -19,9 +19,9 @@ to the HprofParser constructor in HprofParser.main.
 
 I provide a sample heap dump from Dacapo antlr in the file java.hprof.
 
-The code can be run with the following commands:
-% javac *.java
-% java Hprof java.hprof
+The build uses Maven (http://maven.apache.org/).  You can build it with the
+following command:
+$ maven compile
 
 To produce a binary heap dump from the Sun JVM, use the following command:
 java -agentlib:hprof=heap=dump,format=b ToBeProfiledClass
