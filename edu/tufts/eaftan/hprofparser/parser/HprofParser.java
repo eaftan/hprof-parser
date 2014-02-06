@@ -1,10 +1,3 @@
-/****************************************************************************
- * This class parses an hprof heap dump file in binary format.  The hprof 
- * dump file format is documented in the manual file included with the
- * jvmti_demos.  It is located here on my machine:
- * file:///home/eaftan/jvmti-demos/hprof/src/manual.html
- ****************************************************************************/
-
 package edu.tufts.eaftan.hprofparser.parser;
 
 import edu.tufts.eaftan.hprofparser.parser.datastructures.AllocSite;
@@ -23,6 +16,10 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.ArrayList;
 
+/**
+ * Parses an hprof heap dump file in binary format.  The hprof dump file format is documented in
+ * the hprof_b_spec.h file in the hprof source, which is open-source and available from Oracle.
+ */
 public class HprofParser {
 
   private RecordHandler handler;

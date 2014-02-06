@@ -1,13 +1,3 @@
-/****************************************************************************
- * This is a handler class to be used with the hprof parser.  For each 
- * record the parser encounters, it parses the record and calls the
- * matching function in its RecordHandler class.  The RecordHandler 
- * handles each record, performing some function such as printing the
- * record or building a graph.
- *
- * This derived class prints details for each record encountered.
- * **************************************************************************/
-
 package edu.tufts.eaftan.hprofparser.handler;
 
 import edu.tufts.eaftan.hprofparser.parser.datastructures.AllocSite;
@@ -22,6 +12,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 
+/**
+ * Prints details for each record encountered.
+ */
 public class PrintHandler extends RecordHandler {
 
   private HashMap<Long, String> stringMap = new HashMap<Long, String>();
@@ -29,6 +22,7 @@ public class PrintHandler extends RecordHandler {
 
   /* handler for file header */
   
+  @Override
   public void header(String format, int idSize, long time) {
     System.out.println(format);
     System.out.println(idSize);
@@ -38,11 +32,13 @@ public class PrintHandler extends RecordHandler {
 
   /* Handlers for top-level records */
 
+  @Override
   public void stringInUTF8(long id, String data) {
     // store string for later lookup
     stringMap.put(id, data);
   }
 
+  @Override
   public void loadClass(int classSerialNum, long classObjId, 
       int stackTraceSerialNum, long classNameStringId) {
     System.out.println("Load Class:");
@@ -52,11 +48,13 @@ public class PrintHandler extends RecordHandler {
     System.out.println("    class name string: " + stringMap.get(classNameStringId));
   }
 
+  @Override
   public void unloadClass(int classSerialNum) {
     System.out.println("Unload Class:");
     System.out.println("    class serial num: " + classSerialNum);
   }
 
+  @Override
   public void stackFrame(long stackFrameId, long methodNameStringId, 
       long methodSigStringId, long sourceFileNameStringId, 
       int classSerialNum, int location) {
@@ -93,6 +91,7 @@ public class PrintHandler extends RecordHandler {
 
   }
 
+  @Override
   public void stackTrace(int stackTraceSerialNum, int threadSerialNum, 
       int numFrames, long[] stackFrameIds) {
     System.out.println("Stack Trace:");
@@ -105,6 +104,7 @@ public class PrintHandler extends RecordHandler {
     }
   }
 
+  @Override
   public void allocSites(short bitMaskFlags, float cutoffRatio, 
       int totalLiveBytes, int totalLiveInstances, long totalBytesAllocated,
       long totalInstancesAllocated, AllocSite[] sites) {
@@ -135,6 +135,7 @@ public class PrintHandler extends RecordHandler {
     }
   }
 
+  @Override
   public void heapSummary(int totalLiveBytes, int totalLiveInstances,
       long totalBytesAllocated, long totalInstancesAllocated) {
     System.out.println("Heap Summary:");
@@ -144,6 +145,7 @@ public class PrintHandler extends RecordHandler {
     System.out.println("    total instances allocated: " + totalInstancesAllocated);
   }
 
+  @Override
   public void startThread(int threadSerialNum, long threadObjectId,
       int stackTraceSerialNum, long threadNameStringId, long threadGroupNameId,
       long threadParentGroupNameId) {
@@ -156,23 +158,28 @@ public class PrintHandler extends RecordHandler {
     System.out.println("    thread parent group name id: " + stringMap.get(threadParentGroupNameId));
   }
 
+  @Override
   public void endThread(int threadSerialNum) {
     System.out.println("End Thread:");
     System.out.println("    thread serial num: " + threadSerialNum);
   }
 
+  @Override
   public void heapDump() {
     System.out.println("Heap Dump:");
   }
   
+  @Override
   public void heapDumpEnd() {
     System.out.println("Heap Dump End:");
   }
 
+  @Override
   public void heapDumpSegment() {
     System.out.println("Heap Dump Segment:");
   }
 
+  @Override
   public void cpuSamples(int totalNumOfSamples, CPUSample[] samples) {
     System.out.println("CPU Samples:");
     System.out.println("    total num of samples: " + totalNumOfSamples);
@@ -183,6 +190,7 @@ public class PrintHandler extends RecordHandler {
     }
   }
 
+  @Override
   public void controlSettings(int bitMaskFlags, short stackTraceDepth) {
     System.out.println("Control Settings:");
     System.out.println("    bit mask flags: " + bitMaskFlags);
@@ -194,17 +202,20 @@ public class PrintHandler extends RecordHandler {
 
   /* Handlers for heap dump records */
 
+  @Override
   public void rootUnknown(long objId) {
     System.out.println("Root Unknown:");
     System.out.println("    object id: " + objId);
   }
 
+  @Override
   public void rootJNIGlobal(long objId, long JNIGlobalRefId) {
     System.out.println("Root JNI Global:");
     System.out.println("    object id: " + objId);
     System.out.println("    JNI global ref id: " + JNIGlobalRefId);
   }
 
+  @Override
   public void rootJNILocal(long objId, int threadSerialNum, int frameNum) {
     System.out.println("Root JNI Local:");
     System.out.println("    object id: " + objId);
@@ -212,6 +223,7 @@ public class PrintHandler extends RecordHandler {
     System.out.println("    frame num: " + frameNum);
   }
 
+  @Override
   public void rootJavaFrame(long objId, int threadSerialNum, int frameNum) {
     System.out.println("Root Java Frame:");
     System.out.println("    object id: " + objId);
@@ -219,28 +231,33 @@ public class PrintHandler extends RecordHandler {
     System.out.println("    frame num: " + frameNum);
   }
 
+  @Override
   public void rootNativeStack(long objId, int threadSerialNum) {
     System.out.println("Root Native Stack:");
     System.out.println("    object id: " + objId);
     System.out.println("    thread serial num: " + threadSerialNum);
   }
 
+  @Override
   public void rootStickyClass(long objId) {
     System.out.println("Root Sticky Class:");
     System.out.println("    object id: " + objId);
   }
 
+  @Override
   public void rootThreadBlock(long objId, int threadSerialNum) {
     System.out.println("Root Thread Block:");
     System.out.println("    object id: " + objId);
     System.out.println("    thread serial num: " + threadSerialNum);
   }
 
+  @Override
   public void rootMonitorUsed(long objId) {
     System.out.println("Root Monitor Used:");
     System.out.println("    object id: " + objId);
   }
 
+  @Override
   public void rootThreadObj(long objId, int threadSerialNum, 
       int stackTraceSerialNum) {
     System.out.println("Root Thread Object:");
@@ -249,6 +266,7 @@ public class PrintHandler extends RecordHandler {
     System.out.println("    stack trace serial num: " + stackTraceSerialNum);
   }
 
+  @Override
   public void classDump(long classObjId, int stackTraceSerialNum, 
       long superClassObjId, long classLoaderObjId, long signersObjId,
       long protectionDomainObjId, long reserved1, long reserved2, 
@@ -294,6 +312,7 @@ public class PrintHandler extends RecordHandler {
         instanceFields, null));
   }
 
+  @Override
   public void instanceDump(long objId, int stackTraceSerialNum, 
       long classObjId, Value[] instanceFieldValues) {
     System.out.println("Instance Dump:");
@@ -322,6 +341,7 @@ public class PrintHandler extends RecordHandler {
     }
   }
 
+  @Override
   public void objArrayDump(long objId, int stackTraceSerialNum, 
       long elemClassObjId, long[] elems) {
     System.out.println("Object Array Dump:");
@@ -336,6 +356,7 @@ public class PrintHandler extends RecordHandler {
     }
   }
 
+  @Override
   public void primArrayDump(long objId, int stackTraceSerialNum, 
       byte elemType, Value[] elems) {
     System.out.println("Primitive Array Dump:");

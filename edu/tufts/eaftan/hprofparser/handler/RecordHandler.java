@@ -1,13 +1,3 @@
-/****************************************************************************
- * This is a base class to be used with the hprof parser.  For each 
- * record the parser encounters, it parses the record and calls the
- * matching function in its RecordHandler class.  The RecordHandler 
- * handles each record, performing some function such as printing the
- * record or building a graph.
- *
- * This base class does nothing for any record.
- * **************************************************************************/
-
 package edu.tufts.eaftan.hprofparser.handler;
 
 import edu.tufts.eaftan.hprofparser.parser.datastructures.AllocSite;
@@ -17,7 +7,15 @@ import edu.tufts.eaftan.hprofparser.parser.datastructures.InstanceField;
 import edu.tufts.eaftan.hprofparser.parser.datastructures.Static;
 import edu.tufts.eaftan.hprofparser.parser.datastructures.Value;
 
-public class RecordHandler {
+/**
+ * Base class to be used with the hprof parser.  For each record the parser encounters, it parses 
+ * the record and calls the matching function in its RecordHandler class.  The RecordHandler 
+ * handles each record, performing some function such as printing the record or building a graph.
+ *
+ * The default behavior is to do nothing for any record.
+ */
+@SuppressWarnings("unused")
+public abstract class RecordHandler {
 
   /* handler for file header */
   

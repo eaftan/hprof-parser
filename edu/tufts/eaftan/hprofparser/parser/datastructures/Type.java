@@ -39,7 +39,8 @@ public enum Type {
 
     return null;
   }
-    
+  
+  @Override
   public String toString() {
     return name;
   }

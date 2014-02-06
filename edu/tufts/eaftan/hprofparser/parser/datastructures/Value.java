@@ -1,10 +1,8 @@
-/****************************************************************************
- * This class represents a value from the Hprof file.  The value can be
- * of many possible types.
- ***************************************************************************/
-
 package edu.tufts.eaftan.hprofparser.parser.datastructures;
 
+/**
+ * This class represents a value from the Hprof file.  The value can be of many possible types.
+ */
 public class Value {
 
   public Type type;
@@ -238,8 +236,7 @@ public class Value {
     return longVal;
   }
 
-
-  /* toString */
+  @Override
   public String toString() {
     if (!initialized)
       System.err.println("Error: cannot print uninitialized value");
@@ -268,6 +265,5 @@ public class Value {
     return null;
 
   }
-
 
 }

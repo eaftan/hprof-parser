@@ -13,11 +13,13 @@ public class StaticPrintHandler extends RecordHandler {
   private HashMap<Long, String> stringMap = new HashMap<Long, String>();
   private HashMap<Long, ClassInfo> classMap = new HashMap<Long, ClassInfo>();
   
+  @Override
   public void stringInUTF8(long id, String data) {
     // store string for later lookup
     stringMap.put(id, data);
   }
   
+  @Override
   public void loadClass(int classSerialNum, long classObjId, 
       int stackTraceSerialNum, long classNameStringId) {
     ClassInfo cls = new ClassInfo();
@@ -26,6 +28,7 @@ public class StaticPrintHandler extends RecordHandler {
     classMap.put(classObjId, cls);
   }
 
+  @Override
   public void classDump(long classObjId, int stackTraceSerialNum, 
       long superClassObjId, long classLoaderObjId, long signersObjId,
       long protectionDomainObjId, long reserved1, long reserved2, 
