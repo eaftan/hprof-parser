@@ -55,7 +55,7 @@ public class IntegrationTest {
   
   @Test
   public void commandLineHandler() throws Exception {
-    String[] args = {"--handler=edu.tufts.eaftan.hprofparser.handler.StaticPrintHandler", 
+    String[] args = {"--handler=edu.tufts.eaftan.hprofparser.handler.examples.StaticPrintHandler", 
         getAbsolutePathForResource("java.hprof")};
     Parse.main(args);
     

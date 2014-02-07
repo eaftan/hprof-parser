@@ -22,10 +22,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import edu.tufts.eaftan.hprofparser.handler.NullRecordHandler;
-import edu.tufts.eaftan.hprofparser.handler.PrintHandler;
+
 import edu.tufts.eaftan.hprofparser.handler.RecordHandler;
-import edu.tufts.eaftan.hprofparser.handler.RootHandler;
-import edu.tufts.eaftan.hprofparser.handler.StaticPrintHandler;
 import edu.tufts.eaftan.hprofparser.handler.examples.statisticscollectinghandler.StatisticsCollectingHandler;
 import edu.tufts.eaftan.hprofparser.parser.HprofParser;
 

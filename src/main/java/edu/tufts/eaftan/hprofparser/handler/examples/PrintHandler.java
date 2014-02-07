@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-package edu.tufts.eaftan.hprofparser.handler;
+package edu.tufts.eaftan.hprofparser.handler.examples;
+
+import edu.tufts.eaftan.hprofparser.handler.NullRecordHandler;
 
 import edu.tufts.eaftan.hprofparser.parser.datastructures.AllocSite;
 import edu.tufts.eaftan.hprofparser.parser.datastructures.CPUSample;

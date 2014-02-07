@@ -34,7 +34,8 @@ package edu.tufts.eaftan.hprofparser;
 
 import com.google.common.collect.Lists;
 
-import edu.tufts.eaftan.hprofparser.handler.PrintHandler;
+import edu.tufts.eaftan.hprofparser.handler.examples.PrintHandler;
+
 import edu.tufts.eaftan.hprofparser.handler.RecordHandler;
 import edu.tufts.eaftan.hprofparser.parser.HprofParser;
 

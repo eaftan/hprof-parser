@@ -1,4 +1,6 @@
-package edu.tufts.eaftan.hprofparser.handler;
+package edu.tufts.eaftan.hprofparser.handler.examples;
+
+import edu.tufts.eaftan.hprofparser.handler.NullRecordHandler;
 
 import java.util.ArrayList;
 import java.util.List;
