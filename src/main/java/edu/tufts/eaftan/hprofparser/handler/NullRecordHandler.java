@@ -31,7 +31,7 @@ import edu.tufts.eaftan.hprofparser.parser.datastructures.Value;
  * The default behavior is to do nothing for any record.
  */
 @SuppressWarnings("unused")
-public abstract class NullRecordHandler implements RecordHandler {
+public class NullRecordHandler implements RecordHandler {
 
   /* handler for file header */
   

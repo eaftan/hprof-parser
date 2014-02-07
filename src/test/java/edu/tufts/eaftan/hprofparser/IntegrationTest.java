@@ -18,7 +18,6 @@ package edu.tufts.eaftan.hprofparser;
 
 import static org.hamcrest.core.StringContains.containsString;
 
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,12 +32,12 @@ import java.net.URISyntaxException;
  */
 public class IntegrationTest {
   
-  private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-  private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
-  
-  private String getAbsolutePathForResource(String relativePath) throws URISyntaxException {
+  private static String getAbsolutePathForResource(String relativePath) throws URISyntaxException {
     return new File(ClassLoader.getSystemResource(relativePath).toURI()).getAbsolutePath();
   }
+  
+  private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+  private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
   
   @Before
   public void setUp() {
@@ -46,12 +45,6 @@ public class IntegrationTest {
     System.setErr(new PrintStream(errContent));
   }
 
-  @After
-  public void cleanUpStreams() {
-    System.setOut(null);
-    System.setErr(null);
-  }
-  
   @Test
   public void basicUsage() throws Exception {
     String[] args = {getAbsolutePathForResource("java.hprof")};
