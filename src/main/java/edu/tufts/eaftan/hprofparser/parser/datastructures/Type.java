@@ -18,13 +18,26 @@ package edu.tufts.eaftan.hprofparser.parser.datastructures;
 
 public enum Type {
 
-  OBJ("Object"), BOOL("boolean"), CHAR("char"), FLOAT("float"), DOUBLE("double"), 
-  BYTE("byte"), SHORT("short"), INT("int"), LONG("long");
+  OBJ("Object", 4), 
+  BOOL("boolean", 1), 
+  CHAR("char", 2), 
+  FLOAT("float", 4), 
+  DOUBLE("double", 8), 
+  BYTE("byte", 1), 
+  SHORT("short", 2), 
+  INT("int", 4), 
+  LONG("long", 8);
   
   private final String name;
+  private final int sizeInBytes;
   
-  private Type(String name) {
+  private Type(String name, int sizeInBytes) {
     this.name = name;
+    this.sizeInBytes = sizeInBytes;
+  }
+  
+  public int sizeInBytes() {
+    return sizeInBytes;
   }
 
   public static Type hprofTypeToEnum(byte type) {

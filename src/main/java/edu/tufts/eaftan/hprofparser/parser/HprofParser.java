@@ -122,7 +122,7 @@ public class HprofParser {
     
     // otherwise we've got an unexpected EOF
     try {
-      int time = in.readInt();    // TODO: we might want time passed to handler fns
+      int time = in.readInt();    // TODO(eaftan): we might want time passed to handler fns
       int bytesLeft = in.readInt();
   
       long l1, l2, l3, l4;
@@ -601,6 +601,8 @@ public class HprofParser {
         b1 = in.readByte();
         bytesRead += idSize + 9;
 
+        // TODO(eaftan): All these arrays should really be nonnull.  We should never call a 
+        // handler method with a null value.
         Value[] vs = null;
         if (i2 > 0) {
           Type t = Type.hprofTypeToEnum(b1);
