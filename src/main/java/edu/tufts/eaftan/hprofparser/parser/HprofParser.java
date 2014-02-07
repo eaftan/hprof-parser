@@ -79,15 +79,11 @@ public class HprofParser {
     handler.header(format, idSize, startTime);
 
     // records
-    while (true) {
-      try {
-        parseRecord(in, idSize);
-      } catch (EOFException e) {
-        handler.finished();
-        break;
-      }
-    }
-
+    boolean done;
+    do {
+      done = parseRecord(in, idSize);
+    } while (!done);
+    handler.finished();
   }
 
   public static String readUntilNull(DataInput in) throws IOException {
@@ -108,7 +104,10 @@ public class HprofParser {
     return new String(bytes, 0, bytesRead);
   }
 
-  private void parseRecord(DataInput in, int idSize) throws IOException {
+  /**
+   * @return true if there are no more records to parse
+   */
+  private boolean parseRecord(DataInput in, int idSize) throws IOException {
 
     /* format:
      *   u1 - tag
@@ -117,180 +116,178 @@ public class HprofParser {
      *   [u1]* - body
      */
 
-    // if we get an EOF on this read, it's OK
-    byte tag = in.readByte();
-    
-    // otherwise we've got an unexpected EOF
+    // if we get an EOF on this read, it just means we're done
+    byte tag;
     try {
-      int time = in.readInt();    // TODO(eaftan): we might want time passed to handler fns
-      int bytesLeft = in.readInt();
-  
-      long l1, l2, l3, l4;
-      int i1, i2, i3, i4, i5, i6, i7, i8, i9;
-      short s1;
-      byte b1;
-      float f1;
-      byte[] bArr1;
-      long[] lArr1;
-  
-      switch (tag) {
-        case 0x1:
-          // String in UTF-8
-          l1 = readId(idSize, in);
-          bytesLeft -= idSize;
-          bArr1 = new byte[bytesLeft];
-          in.readFully(bArr1);
-          handler.stringInUTF8(l1, new String(bArr1));
-          break;
-  
-        case 0x2:
-          // Load class
-          i1 = in.readInt();
-          l1 = readId(idSize, in);
-          i2 = in.readInt();
-          l2 = readId(idSize, in);
-          handler.loadClass(i1, l1, i2, l2);
-          break;
-  
-        case 0x3:
-          // Unload class
-          i1 = in.readInt();
-          handler.unloadClass(i1);
-          break;
-  
-        case 0x4:
-          // Stack frame
-          l1 = readId(idSize, in);
-          l2 = readId(idSize, in);
-          l3 = readId(idSize, in);
-          l4 = readId(idSize, in);
-          i1 = in.readInt();
-          i2 = in.readInt();
-          handler.stackFrame(l1, l2, l3, l4, i1, i2);
-          break;
-  
-        case 0x5:
-          // Stack trace
-          i1 = in.readInt();
-          i2 = in.readInt();
-          i3 = in.readInt();
-          bytesLeft -= 12;
-          lArr1 = new long[bytesLeft/idSize];
-          for (int i=0; i<lArr1.length; i++) {
-            lArr1[i] = readId(idSize, in);
-          }
-          handler.stackTrace(i1, i2, i3, lArr1);
-          break;
-  
-        case 0x6:
-          // Alloc sites
-          s1 = in.readShort();
-          f1 = in.readFloat();
-          i1 = in.readInt();
-          i2 = in.readInt();
-          l1 = in.readLong();
-          l2 = in.readLong();
-          i3 = in.readInt();    // num of sites that follow
-  
-          AllocSite[] allocSites = new AllocSite[i3];
-          for (int i=0; i<allocSites.length; i++) {
-            b1 = in.readByte();
-            i4 = in.readInt();
-            i5 = in.readInt();
-            i6 = in.readInt();
-            i7 = in.readInt();
-            i8 = in.readInt();
-            i9 = in.readInt();
-  
-            allocSites[i] = new AllocSite(b1, i4, i5, i6, i7, i8, i9);
-          }
-  
-          handler.allocSites(s1, f1, i1, i2, l1, l2, allocSites);
-          break;
-  
-        case 0x7: 
-          // Heap summary
-          i1 = in.readInt();
-          i2 = in.readInt();
-          l1 = in.readLong();
-          l2 = in.readLong();
-          handler.heapSummary(i1, i2, l1, l2);
-          break;
-  
-        case 0xa:
-          // Start thread
-          i1 = in.readInt();
-          l1 = readId(idSize, in);
-          i2 = in.readInt();
-          l2 = readId(idSize, in);
-          l3 = readId(idSize, in);
-          l4 = readId(idSize, in);
-          handler.startThread(i1, l1, i2, l2, l3, l4);
-          break;
-  
-        case 0xb:
-          // End thread
-          i1 = in.readInt();
-          handler.endThread(i1);
-          break;
-  
-        case 0xc:
-          // Heap dump
-          handler.heapDump();
-          while (bytesLeft > 0) {
-            bytesLeft -= parseHeapDump(in, idSize);
-          }
-          processInstances(idSize);
-          handler.heapDumpEnd();
-          break;
-  
-        case 0x1c:
-          // Heap dump segment
-          handler.heapDumpSegment();
-          while (bytesLeft > 0) {
-            bytesLeft -= parseHeapDump(in, idSize);
-          }
-          break;
-  
-        case 0x2c:
-          // Heap dump end (of segments)
-          processInstances(idSize);
-          handler.heapDumpEnd();
-          break;
-  
-        case 0xd:
-          // CPU samples
-          i1 = in.readInt();
-          i2 = in.readInt();    // num samples that follow
-  
-          CPUSample[] samples = new CPUSample[i2];
-          for (int i=0; i<samples.length; i++) {
-            i3 = in.readInt();
-            i4 = in.readInt();
-            samples[i] = new CPUSample(i3, i4);
-          }
-  
-          handler.cpuSamples(i1, samples);
-          break;
-  
-        case 0xe: 
-          // Control settings
-          i1 = in.readInt();
-          s1 = in.readShort();
-          handler.controlSettings(i1, s1);
-          break;
-  
-        default:
-          System.err.println("Error: unsupported record type " + tag);
-          System.exit(1);
-          break;
-  
-      }
+      tag = in.readByte();
     } catch (EOFException e) {
-      System.err.println("Unexpected EOF");
-      System.exit(1);
+      return true;
     }
+    
+    // otherwise propagate the EOFException
+    int time = in.readInt();    // TODO(eaftan): we might want time passed to handler fns
+    int bytesLeft = in.readInt();
 
+    long l1, l2, l3, l4;
+    int i1, i2, i3, i4, i5, i6, i7, i8, i9;
+    short s1;
+    byte b1;
+    float f1;
+    byte[] bArr1;
+    long[] lArr1;
+
+    switch (tag) {
+      case 0x1:
+        // String in UTF-8
+        l1 = readId(idSize, in);
+        bytesLeft -= idSize;
+        bArr1 = new byte[bytesLeft];
+        in.readFully(bArr1);
+        handler.stringInUTF8(l1, new String(bArr1));
+        break;
+
+      case 0x2:
+        // Load class
+        i1 = in.readInt();
+        l1 = readId(idSize, in);
+        i2 = in.readInt();
+        l2 = readId(idSize, in);
+        handler.loadClass(i1, l1, i2, l2);
+        break;
+
+      case 0x3:
+        // Unload class
+        i1 = in.readInt();
+        handler.unloadClass(i1);
+        break;
+
+      case 0x4:
+        // Stack frame
+        l1 = readId(idSize, in);
+        l2 = readId(idSize, in);
+        l3 = readId(idSize, in);
+        l4 = readId(idSize, in);
+        i1 = in.readInt();
+        i2 = in.readInt();
+        handler.stackFrame(l1, l2, l3, l4, i1, i2);
+        break;
+
+      case 0x5:
+        // Stack trace
+        i1 = in.readInt();
+        i2 = in.readInt();
+        i3 = in.readInt();
+        bytesLeft -= 12;
+        lArr1 = new long[bytesLeft/idSize];
+        for (int i=0; i<lArr1.length; i++) {
+          lArr1[i] = readId(idSize, in);
+        }
+        handler.stackTrace(i1, i2, i3, lArr1);
+        break;
+
+      case 0x6:
+        // Alloc sites
+        s1 = in.readShort();
+        f1 = in.readFloat();
+        i1 = in.readInt();
+        i2 = in.readInt();
+        l1 = in.readLong();
+        l2 = in.readLong();
+        i3 = in.readInt();    // num of sites that follow
+
+        AllocSite[] allocSites = new AllocSite[i3];
+        for (int i=0; i<allocSites.length; i++) {
+          b1 = in.readByte();
+          i4 = in.readInt();
+          i5 = in.readInt();
+          i6 = in.readInt();
+          i7 = in.readInt();
+          i8 = in.readInt();
+          i9 = in.readInt();
+
+          allocSites[i] = new AllocSite(b1, i4, i5, i6, i7, i8, i9);
+        }
+
+        handler.allocSites(s1, f1, i1, i2, l1, l2, allocSites);
+        break;
+
+      case 0x7: 
+        // Heap summary
+        i1 = in.readInt();
+        i2 = in.readInt();
+        l1 = in.readLong();
+        l2 = in.readLong();
+        handler.heapSummary(i1, i2, l1, l2);
+        break;
+
+      case 0xa:
+        // Start thread
+        i1 = in.readInt();
+        l1 = readId(idSize, in);
+        i2 = in.readInt();
+        l2 = readId(idSize, in);
+        l3 = readId(idSize, in);
+        l4 = readId(idSize, in);
+        handler.startThread(i1, l1, i2, l2, l3, l4);
+        break;
+
+      case 0xb:
+        // End thread
+        i1 = in.readInt();
+        handler.endThread(i1);
+        break;
+
+      case 0xc:
+        // Heap dump
+        handler.heapDump();
+        while (bytesLeft > 0) {
+          bytesLeft -= parseHeapDump(in, idSize);
+        }
+        processInstances(idSize);
+        handler.heapDumpEnd();
+        break;
+
+      case 0x1c:
+        // Heap dump segment
+        handler.heapDumpSegment();
+        while (bytesLeft > 0) {
+          bytesLeft -= parseHeapDump(in, idSize);
+        }
+        break;
+
+      case 0x2c:
+        // Heap dump end (of segments)
+        processInstances(idSize);
+        handler.heapDumpEnd();
+        break;
+
+      case 0xd:
+        // CPU samples
+        i1 = in.readInt();
+        i2 = in.readInt();    // num samples that follow
+
+        CPUSample[] samples = new CPUSample[i2];
+        for (int i=0; i<samples.length; i++) {
+          i3 = in.readInt();
+          i4 = in.readInt();
+          samples[i] = new CPUSample(i3, i4);
+        }
+
+        handler.cpuSamples(i1, samples);
+        break;
+
+      case 0xe: 
+        // Control settings
+        i1 = in.readInt();
+        s1 = in.readShort();
+        handler.controlSettings(i1, s1);
+        break;
+
+      default:
+        throw new UnexpectedRecordTypeException(tag);
+    }
+    
+    return false;
   }
 
   // returns number of bytes parsed
@@ -663,10 +660,7 @@ public class HprofParser {
         break;
 
       default:
-        System.err.println("Error: unsupported heap dump record type " + tag);
-        System.exit(1);
-        break;
-
+        throw new UnexpectedSubRecordTypeException(tag); 
     }
 
     return bytesRead;
@@ -744,9 +738,7 @@ public class HprofParser {
 
   }
 
-
   private static long readId(int idSize, DataInput in) throws IOException {
-
     long id = -1;
     if (idSize == 4) {
       id = in.readInt();
@@ -754,8 +746,7 @@ public class HprofParser {
     } else if (idSize == 8) {
       id = in.readLong();
     } else {
-      System.err.println("Error: unsupported identifier size " + idSize);
-      System.exit(1);
+      throw new IllegalArgumentException("Invalid identifier size " + idSize);
     }
 
     return id;
@@ -773,6 +764,7 @@ public class HprofParser {
         bytesRead++;
       }
     } catch (EOFException e) {
+      // expected
     }
     
     return bytesRead;

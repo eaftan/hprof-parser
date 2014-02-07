@@ -87,8 +87,8 @@ public class Parse {
 
       in.close();
     } catch (IOException e) {
-      System.out.println("Error: " + e);
-    }
+      System.err.println(e);
+    } 
 
   }
 
