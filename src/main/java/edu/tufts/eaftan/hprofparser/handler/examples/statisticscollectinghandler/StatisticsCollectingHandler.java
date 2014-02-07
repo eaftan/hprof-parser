@@ -97,7 +97,7 @@ public class StatisticsCollectingHandler extends NullRecordHandler {
   
   @Override
   public void finished() {
-    Comparator<TypeInfo> instanceCountComparator = new Comparator<TypeInfo>() {
+    Comparator<TypeInfo> totalSizeComparator = new Comparator<TypeInfo>() {
       @Override
       public int compare(TypeInfo cls1, TypeInfo cls2) {
         return Ints.checkedCast(cls2.totalSize() - cls1.totalSize());
@@ -106,7 +106,7 @@ public class StatisticsCollectingHandler extends NullRecordHandler {
     
     List<TypeInfo> typeInfoList = new ArrayList<>(classMap.values());
     typeInfoList.addAll(arrayInfoMap.values());
-    Collections.sort(typeInfoList, instanceCountComparator);
+    Collections.sort(typeInfoList, totalSizeComparator);
     for (TypeInfo typeInfo : typeInfoList) {
       if (typeInfo.instanceCount == 0) {
         continue;
