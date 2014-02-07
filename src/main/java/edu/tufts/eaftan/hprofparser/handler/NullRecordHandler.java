@@ -16,6 +16,8 @@
 
 package edu.tufts.eaftan.hprofparser.handler;
 
+import java.util.List;
+
 import edu.tufts.eaftan.hprofparser.parser.datastructures.AllocSite;
 import edu.tufts.eaftan.hprofparser.parser.datastructures.CPUSample;
 import edu.tufts.eaftan.hprofparser.parser.datastructures.Constant;
@@ -58,12 +60,12 @@ public class NullRecordHandler implements RecordHandler {
 
   @Override
   public void stackTrace(int stackTraceSerialNum, int threadSerialNum, 
-      int numFrames, long[] stackFrameIds) {}
+      int numFrames, List<Long> stackFrameIds) {}
 
   @Override
   public void allocSites(short bitMaskFlags, float cutoffRatio, 
       int totalLiveBytes, int totalLiveInstances, long totalBytesAllocated,
-      long totalInstancesAllocated, AllocSite[] sites) {}
+      long totalInstancesAllocated, List<AllocSite> sites) {}
 
   @Override
   public void heapSummary(int totalLiveBytes, int totalLiveInstances,
@@ -87,7 +89,7 @@ public class NullRecordHandler implements RecordHandler {
   public void heapDumpSegment() {}
 
   @Override
-  public void cpuSamples(int totalNumOfSamples, CPUSample[] samples) {}
+  public void cpuSamples(int totalNumOfSamples, List<CPUSample> samples) {}
 
   @Override
   public void controlSettings(int bitMaskFlags, short stackTraceDepth) {}
@@ -127,20 +129,20 @@ public class NullRecordHandler implements RecordHandler {
   public void classDump(long classObjId, int stackTraceSerialNum, 
       long superClassObjId, long classLoaderObjId, long signersObjId,
       long protectionDomainObjId, long reserved1, long reserved2, 
-      int instanceSize, Constant[] constants, Static[] statics,
-      InstanceField[] instanceFields) {}
+      int instanceSize, List<Constant> constants, List<Static> statics,
+      List<InstanceField> instanceFields) {}
 
   @Override
   public void instanceDump(long objId, int stackTraceSerialNum, 
-      long classObjId, Value[] instanceFieldValues) {}
+      long classObjId, List<Value> instanceFieldValues) {}
 
   @Override
   public void objArrayDump(long objId, int stackTraceSerialNum, 
-      long elemClassObjId, long[] elems) {}
+      long elemClassObjId, List<Long> elems) {}
 
   @Override
   public void primArrayDump(long objId, int stackTraceSerialNum, 
-      byte elemType, Value[] elems) {}
+      byte elemType, List<Value> elems) {}
 
   
   /* handler for end of file */
