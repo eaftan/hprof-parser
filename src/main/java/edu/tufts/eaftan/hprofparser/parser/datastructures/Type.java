@@ -16,6 +16,8 @@
 
 package edu.tufts.eaftan.hprofparser.parser.datastructures;
 
+import edu.tufts.eaftan.hprofparser.parser.HprofParserException;
+
 public enum Type {
 
   OBJ("Object", 4), 
@@ -61,12 +63,8 @@ public enum Type {
       case 11:
         return LONG;
       default:
-        System.err.println("Error: unsupported type " + type);
-        System.exit(1);
-        break;
+        throw new HprofParserException("Unexpected type in heap dump: " + type);
     }
-
-    return null;
   }
   
   @Override

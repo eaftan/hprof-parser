@@ -12,6 +12,8 @@ import edu.tufts.eaftan.hprofparser.parser.datastructures.Value;
  * this interface and calls the matching callback method on each record encountered.
  * Implementations of this interface can do things like printing the record or building a graph.
  * 
+ * <p>You may assume that all references passed into the handler methods are non-null.
+ * 
  * <p>Generally you want to subclass {@code NullRecordHandler} rather than implement this interface
  * directly. 
  */

@@ -16,8 +16,9 @@
 
 package edu.tufts.eaftan.hprofparser.parser;
 
-import edu.tufts.eaftan.hprofparser.handler.RecordHandler;
+import com.google.common.base.Preconditions;
 
+import edu.tufts.eaftan.hprofparser.handler.RecordHandler;
 import edu.tufts.eaftan.hprofparser.parser.datastructures.AllocSite;
 import edu.tufts.eaftan.hprofparser.parser.datastructures.CPUSample;
 import edu.tufts.eaftan.hprofparser.parser.datastructures.ClassInfo;
@@ -284,7 +285,7 @@ public class HprofParser {
         break;
 
       default:
-        throw new UnexpectedRecordTypeException(tag);
+        throw new HprofParserException("Unexpected top-level record type: " + tag);
     }
     
     return false;
@@ -393,146 +394,140 @@ public class HprofParser {
         /* Constants */
         s1 = in.readShort();    // number of constants
         bytesRead += 2;
-        Constant[] constants = null;
-        if (s1 > 0) {
-          constants = new Constant[s1];
-          for (int i=0; i<s1; i++) {
-            short constantPoolIndex = in.readShort();
-            byte btype = in.readByte();
-            bytesRead += 3;
-            Type type = Type.hprofTypeToEnum(btype);
-            Value v = null;
-  
-            switch (type) {
-              case OBJ:     // object
-                long vid = readId(idSize, in);
-                bytesRead += idSize;
-                v = new Value(type, vid);
-                break;
-              case BOOL:     // boolean
-                boolean vbool = in.readBoolean();
-                bytesRead += 1;
-                v = new Value(type, vbool);
-                break;
-              case CHAR:     // char
-                char vc = in.readChar();
-                bytesRead += 2;
-                v = new Value(type, vc);
-                break;
-              case FLOAT:     // float
-                float vf = in.readFloat();
-                bytesRead += 4;
-                v = new Value(type, vf);
-                break;
-              case DOUBLE:     // double
-                double vd = in.readDouble();
-                bytesRead += 8;
-                v = new Value(type, vd);
-                break;
-              case BYTE:     // byte
-                byte vbyte = in.readByte();
-                bytesRead += 1;
-                v = new Value(type, vbyte);
-                break;
-              case SHORT:     // short
-                short vs = in.readShort();
-                bytesRead += 2;
-                v = new Value(type, vs);
-                break;
-              case INT:    // int
-                int vi = in.readInt();
-                bytesRead += 4;
-                v = new Value(type, vi);
-                break;
-              case LONG:    // long
-                long vl = in.readLong();
-                bytesRead += 8;
-                v = new Value(type, vl);
-                break;
-            }
-  
-            constants[i] = new Constant(constantPoolIndex, v);
+        Preconditions.checkState(s1 >= 0);
+        Constant[] constants = new Constant[s1];
+        for (int i=0; i<s1; i++) {
+          short constantPoolIndex = in.readShort();
+          byte btype = in.readByte();
+          bytesRead += 3;
+          Type type = Type.hprofTypeToEnum(btype);
+          Value v = null;
+
+          switch (type) {
+            case OBJ:     // object
+              long vid = readId(idSize, in);
+              bytesRead += idSize;
+              v = new Value(type, vid);
+              break;
+            case BOOL:     // boolean
+              boolean vbool = in.readBoolean();
+              bytesRead += 1;
+              v = new Value(type, vbool);
+              break;
+            case CHAR:     // char
+              char vc = in.readChar();
+              bytesRead += 2;
+              v = new Value(type, vc);
+              break;
+            case FLOAT:     // float
+              float vf = in.readFloat();
+              bytesRead += 4;
+              v = new Value(type, vf);
+              break;
+            case DOUBLE:     // double
+              double vd = in.readDouble();
+              bytesRead += 8;
+              v = new Value(type, vd);
+              break;
+            case BYTE:     // byte
+              byte vbyte = in.readByte();
+              bytesRead += 1;
+              v = new Value(type, vbyte);
+              break;
+            case SHORT:     // short
+              short vs = in.readShort();
+              bytesRead += 2;
+              v = new Value(type, vs);
+              break;
+            case INT:    // int
+              int vi = in.readInt();
+              bytesRead += 4;
+              v = new Value(type, vi);
+              break;
+            case LONG:    // long
+              long vl = in.readLong();
+              bytesRead += 8;
+              v = new Value(type, vl);
+              break;
           }
+
+          constants[i] = new Constant(constantPoolIndex, v);
         }
 
         /* Statics */
         s2 = in.readShort();    // number of static fields
         bytesRead += 2;
-        Static[] statics = null;
-        if (s2 > 0) {
-          statics = new Static[s2];
-          for (int i=0; i<s2; i++) {
-            long staticFieldNameStringId = readId(idSize, in);
-            byte btype = in.readByte();
-            bytesRead += idSize + 1;
-            Type type = Type.hprofTypeToEnum(btype);
-            Value v = null;
-  
-            switch (type) {
-              case OBJ:     // object
-                long vid = readId(idSize, in);
-                bytesRead += idSize;
-                v = new Value(type, vid);
-                break;
-              case BOOL:     // boolean
-                boolean vbool = in.readBoolean();
-                bytesRead += 1;
-                v = new Value(type, vbool);
-                break;
-              case CHAR:     // char
-                char vc = in.readChar();
-                bytesRead += 2;
-                v = new Value(type, vc);
-                break;
-              case FLOAT:     // float
-                float vf = in.readFloat();
-                bytesRead += 4;
-                v = new Value(type, vf);
-                break;
-              case DOUBLE:     // double
-                double vd = in.readDouble();
-                bytesRead += 8;
-                v = new Value(type, vd);
-                break;
-              case BYTE:     // byte
-                byte vbyte = in.readByte();
-                bytesRead += 1;
-                v = new Value(type, vbyte);
-                break;
-              case SHORT:     // short
-                short vs = in.readShort();
-                bytesRead += 2;
-                v = new Value(type, vs);
-                break;
-              case INT:    // int
-                int vi = in.readInt();
-                bytesRead += 4;
-                v = new Value(type, vi);
-                break;
-              case LONG:    // long
-                long vl = in.readLong();
-                bytesRead += 8;
-                v = new Value(type, vl);
-                break;
-            }
-  
-            statics[i] = new Static(staticFieldNameStringId, v);
+        Preconditions.checkState(s2 >= 0);
+        Static[] statics = new Static[s2];
+        for (int i=0; i<s2; i++) {
+          long staticFieldNameStringId = readId(idSize, in);
+          byte btype = in.readByte();
+          bytesRead += idSize + 1;
+          Type type = Type.hprofTypeToEnum(btype);
+          Value v = null;
+
+          switch (type) {
+            case OBJ:     // object
+              long vid = readId(idSize, in);
+              bytesRead += idSize;
+              v = new Value(type, vid);
+              break;
+            case BOOL:     // boolean
+              boolean vbool = in.readBoolean();
+              bytesRead += 1;
+              v = new Value(type, vbool);
+              break;
+            case CHAR:     // char
+              char vc = in.readChar();
+              bytesRead += 2;
+              v = new Value(type, vc);
+              break;
+            case FLOAT:     // float
+              float vf = in.readFloat();
+              bytesRead += 4;
+              v = new Value(type, vf);
+              break;
+            case DOUBLE:     // double
+              double vd = in.readDouble();
+              bytesRead += 8;
+              v = new Value(type, vd);
+              break;
+            case BYTE:     // byte
+              byte vbyte = in.readByte();
+              bytesRead += 1;
+              v = new Value(type, vbyte);
+              break;
+            case SHORT:     // short
+              short vs = in.readShort();
+              bytesRead += 2;
+              v = new Value(type, vs);
+              break;
+            case INT:    // int
+              int vi = in.readInt();
+              bytesRead += 4;
+              v = new Value(type, vi);
+              break;
+            case LONG:    // long
+              long vl = in.readLong();
+              bytesRead += 8;
+              v = new Value(type, vl);
+              break;
           }
+
+          statics[i] = new Static(staticFieldNameStringId, v);
         }
 
         /* Instance fields */
         s3 = in.readShort();    // number of instance fields
         bytesRead += 2;
-        InstanceField[] instanceFields = null;
-        if (s3 > 0) {
-          instanceFields = new InstanceField[s3];
-          for (int i=0; i<s3; i++) {
-            long fieldNameStringId = readId(idSize, in);
-            byte btype = in.readByte();
-            bytesRead += idSize + 1;
-            Type type = Type.hprofTypeToEnum(btype);
-            instanceFields[i] = new InstanceField(fieldNameStringId, type);
-          }
+        Preconditions.checkState(s3 >= 0);
+        InstanceField[] instanceFields = new InstanceField[s3];
+        for (int i=0; i<s3; i++) {
+          long fieldNameStringId = readId(idSize, in);
+          byte btype = in.readByte();
+          bytesRead += idSize + 1;
+          Type type = Type.hprofTypeToEnum(btype);
+          instanceFields[i] = new InstanceField(fieldNameStringId, type);
         }
 
         /**
@@ -553,13 +548,10 @@ public class HprofParser {
         i1 = in.readInt();
         l2 = readId(idSize, in);    // class obj id
         i2 = in.readInt();    // num of bytes that follow
-        if (i2 > 0) {
-          bArr1 = new byte[i2];
-          in.readFully(bArr1);
-        } else {
-          bArr1 = null;
-        }
-
+        Preconditions.checkState(i2 >= 0);
+        bArr1 = new byte[i2];
+        in.readFully(bArr1);
+        
         /** 
          * because class dump records come *after* instance dump records,
          * we don't know how to interpret the values yet.  we have to
@@ -577,13 +569,10 @@ public class HprofParser {
         i2 = in.readInt();    // number of elements
         l2 = readId(idSize, in);
 
-        if (i2 > 0) {
-          lArr1 = new long[i2];
-          for (int i=0; i<i2; i++) {
-            lArr1[i] = readId(idSize, in);
-          }
-        } else {
-          lArr1 = null;
+        Preconditions.checkState(i2 >= 0);
+        lArr1 = new long[i2];
+        for (int i=0; i<i2; i++) {
+          lArr1[i] = readId(idSize, in);
         }
 
         handler.objArrayDump(l1, i1, l2, lArr1);
@@ -598,69 +587,64 @@ public class HprofParser {
         b1 = in.readByte();
         bytesRead += idSize + 9;
 
-        // TODO(eaftan): All these arrays should really be nonnull.  We should never call a 
-        // handler method with a null value.
-        Value[] vs = null;
-        if (i2 > 0) {
-          Type t = Type.hprofTypeToEnum(b1);
-          vs = new Value[i2];
-          for (int i=0; i<vs.length; i++) {
-            switch (t) {
-              case OBJ:
-                long vobj = readId(idSize, in);
-                vs[i] = new Value(t, vobj);
-                bytesRead += idSize;
-                break;
-              case BOOL:
-                boolean vbool = in.readBoolean();
-                vs[i] = new Value(t, vbool);
-                bytesRead += 1;
-                break;
-              case CHAR:
-                char vc = in.readChar();
-                vs[i] = new Value(t, vc);
-                bytesRead += 2;
-                break;
-              case FLOAT:
-                float vf = in.readFloat();
-                vs[i] = new Value(t, vf);
-                bytesRead += 4;
-                break;
-              case DOUBLE:
-                double vd = in.readDouble();
-                vs[i] = new Value(t, vd);
-                bytesRead += 8;
-                break;
-              case BYTE:
-                byte vbyte = in.readByte();
-                vs[i] = new Value(t, vbyte);
-                bytesRead += 1;
-                break;
-              case SHORT:
-                short vshort = in.readShort();
-                vs[i] = new Value(t, vshort);
-                bytesRead += 2;
-                break;
-              case INT:
-                int vi = in.readInt();
-                vs[i] = new Value(t, vi);
-                bytesRead += 4;
-                break;
-              case LONG:
-                long vlong = in.readLong();
-                vs[i] = new Value(t, vlong);
-                bytesRead += 8;
-                break;
-            }
-
-          } 
+        Preconditions.checkState(i2 >= 0);
+        Value[] vs = new Value[i2];
+        Type t = Type.hprofTypeToEnum(b1);
+        for (int i=0; i<vs.length; i++) {
+          switch (t) {
+            case OBJ:
+              long vobj = readId(idSize, in);
+              vs[i] = new Value(t, vobj);
+              bytesRead += idSize;
+              break;
+            case BOOL:
+              boolean vbool = in.readBoolean();
+              vs[i] = new Value(t, vbool);
+              bytesRead += 1;
+              break;
+            case CHAR:
+              char vc = in.readChar();
+              vs[i] = new Value(t, vc);
+              bytesRead += 2;
+              break;
+            case FLOAT:
+              float vf = in.readFloat();
+              vs[i] = new Value(t, vf);
+              bytesRead += 4;
+              break;
+            case DOUBLE:
+              double vd = in.readDouble();
+              vs[i] = new Value(t, vd);
+              bytesRead += 8;
+              break;
+            case BYTE:
+              byte vbyte = in.readByte();
+              vs[i] = new Value(t, vbyte);
+              bytesRead += 1;
+              break;
+            case SHORT:
+              short vshort = in.readShort();
+              vs[i] = new Value(t, vshort);
+              bytesRead += 2;
+              break;
+            case INT:
+              int vi = in.readInt();
+              vs[i] = new Value(t, vi);
+              bytesRead += 4;
+              break;
+            case LONG:
+              long vlong = in.readLong();
+              vs[i] = new Value(t, vlong);
+              bytesRead += 8;
+              break;
+          }
         } 
 
         handler.primArrayDump(l1, i1, b1, vs);
         break;
 
       default:
-        throw new UnexpectedSubRecordTypeException(tag); 
+        throw new HprofParserException("Unexpected heap dump sub-record type: " + tag);
     }
 
     return bytesRead;
@@ -669,73 +653,65 @@ public class HprofParser {
 
   private void processInstances(int idSize) throws IOException {
     for (Instance i: instanceList) {
+      ByteArrayInputStream bs = new ByteArrayInputStream(i.packedValues);
+      DataInputStream input = new DataInputStream(bs);
 
-      if (i.packedValues != null) {
-        ByteArrayInputStream bs = new ByteArrayInputStream(i.packedValues);
-        DataInputStream input = new DataInputStream(bs);
-  
-        ArrayList<Value> values = new ArrayList<Value>();
-  
-        // superclass of Object is 0
-        long nextClass = i.classObjId;
-        while (nextClass != 0) {
-          ClassInfo ci = classMap.get(nextClass);
-          nextClass = ci.superClassObjId;
-          if (ci.instanceFields != null) {
-            for (InstanceField field: ci.instanceFields) {
-              Value v = null;
-              switch (field.type) {
-                case OBJ:     // object
-                  long vid = readId(idSize, input);
-                  v = new Value(field.type, vid);
-                  break;
-                case BOOL:     // boolean
-                  boolean vbool = input.readBoolean();
-                  v = new Value(field.type, vbool);
-                  break;
-                case CHAR:     // char
-                  char vc = input.readChar();
-                  v = new Value(field.type, vc);
-                  break;
-                case FLOAT:     // float
-                  float vf = input.readFloat();
-                  v = new Value(field.type, vf);
-                  break;
-                case DOUBLE:     // double
-                  double vd = input.readDouble();
-                  v = new Value(field.type, vd);
-                  break;
-                case BYTE:     // byte
-                  byte vbyte = input.readByte();
-                  v = new Value(field.type, vbyte);
-                  break;
-                case SHORT:     // short
-                  short vs = input.readShort();
-                  v = new Value(field.type, vs);
-                  break;
-                case INT:    // int
-                  int vi = input.readInt();
-                  v = new Value(field.type, vi);
-                  break;
-                case LONG:    // long
-                  long vl = input.readLong();
-                  v = new Value(field.type, vl);
-                  break;
-              }
-              values.add(v);
-            }
+      ArrayList<Value> values = new ArrayList<Value>();
+
+      // superclass of Object is 0
+      long nextClass = i.classObjId;
+      while (nextClass != 0) {
+        ClassInfo ci = classMap.get(nextClass);
+        nextClass = ci.superClassObjId;
+        for (InstanceField field: ci.instanceFields) {
+          Value v = null;
+          switch (field.type) {
+            case OBJ:     // object
+              long vid = readId(idSize, input);
+              v = new Value(field.type, vid);
+              break;
+            case BOOL:     // boolean
+              boolean vbool = input.readBoolean();
+              v = new Value(field.type, vbool);
+              break;
+            case CHAR:     // char
+              char vc = input.readChar();
+              v = new Value(field.type, vc);
+              break;
+            case FLOAT:     // float
+              float vf = input.readFloat();
+              v = new Value(field.type, vf);
+              break;
+            case DOUBLE:     // double
+              double vd = input.readDouble();
+              v = new Value(field.type, vd);
+              break;
+            case BYTE:     // byte
+              byte vbyte = input.readByte();
+              v = new Value(field.type, vbyte);
+              break;
+            case SHORT:     // short
+              short vs = input.readShort();
+              v = new Value(field.type, vs);
+              break;
+            case INT:    // int
+              int vi = input.readInt();
+              v = new Value(field.type, vi);
+              break;
+            case LONG:    // long
+              long vl = input.readLong();
+              v = new Value(field.type, vl);
+              break;
           }
+          values.add(v);
         }
-  
-        Value[] valuesArr = new Value[values.size()];
-        valuesArr = values.toArray(valuesArr);
-        handler.instanceDump(i.objId, i.stackTraceSerialNum, i.classObjId, 
-            valuesArr);
-      } else {
-        handler.instanceDump(i.objId, i.stackTraceSerialNum, i.classObjId, null);
       }
-    }
 
+      Value[] valuesArr = new Value[values.size()];
+      valuesArr = values.toArray(valuesArr);
+      handler.instanceDump(i.objId, i.stackTraceSerialNum, i.classObjId, 
+          valuesArr);
+    }
   }
 
   private static long readId(int idSize, DataInput in) throws IOException {

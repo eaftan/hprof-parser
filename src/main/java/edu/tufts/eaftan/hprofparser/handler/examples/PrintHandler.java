@@ -301,29 +301,22 @@ public class PrintHandler extends NullRecordHandler {
     System.out.println("    reserved 2: " + reserved2);
     System.out.println("    instance size: " + instanceSize);
     
-    if (constants != null) {
-      System.out.println("    constant pool:");
-      for (Constant c: constants) {
-        System.out.println("        " + c.constantPoolIndex + ": " + c.value);
-      }
+    System.out.println("    constant pool:");
+    for (Constant c: constants) {
+      System.out.println("        " + c.constantPoolIndex + ": " + c.value);
     }
-    
-    if (statics != null) {
-      System.out.println("    static fields:");
-      for (Static s: statics) {
-        System.out.println("        " + stringMap.get(s.staticFieldNameStringId) + ": " + 
-            s.value);
-      }
+
+    System.out.println("    static fields:");
+    for (Static s: statics) {
+      System.out.println("        " + stringMap.get(s.staticFieldNameStringId) + ": " + 
+          s.value);
     }
-    
-    if (instanceFields != null) {
-      System.out.println("    instance fields:");
-      for (InstanceField i: instanceFields) {
-        System.out.println("        " + stringMap.get(i.fieldNameStringId) + ": " + 
-            i.type);
-      }
+
+    System.out.println("    instance fields:");
+    for (InstanceField i: instanceFields) {
+      System.out.println("        " + stringMap.get(i.fieldNameStringId) + ": " + 
+          i.type);
     }
-    // TODO: constants, statics, instance fields
     
     // store class info in a hashmap for later access
     classMap.put(classObjId, new ClassInfo(classObjId, superClassObjId, instanceSize,
@@ -338,7 +331,7 @@ public class PrintHandler extends NullRecordHandler {
     System.out.println("    stack trace serial num: " + stackTraceSerialNum);
     System.out.println("    class object id: " + classObjId);
     
-    if (instanceFieldValues != null) {
+    if (instanceFieldValues.length > 0) {
       System.out.println("    instance field values:");
       
       // superclass of Object is 0
@@ -347,12 +340,10 @@ public class PrintHandler extends NullRecordHandler {
       while (nextClass != 0) {
         ClassInfo ci = classMap.get(nextClass);
         nextClass = ci.superClassObjId;
-        if (ci.instanceFields != null) {
-          for (InstanceField field: ci.instanceFields) {
-            System.out.print("        " + stringMap.get(field.fieldNameStringId));
-            System.out.println(" = " + instanceFieldValues[i]);
-            i++;
-          }
+        for (InstanceField field : ci.instanceFields) {
+          System.out.print("        " + stringMap.get(field.fieldNameStringId));
+          System.out.println(" = " + instanceFieldValues[i]);
+          i++;
         }
       }
       assert i == instanceFieldValues.length;
@@ -367,10 +358,8 @@ public class PrintHandler extends NullRecordHandler {
     System.out.println("    stack trace serial num: " + stackTraceSerialNum);
     System.out.println("    element class object id: " + elemClassObjId);
 
-    if (elems != null) {
-      for (int i=0; i<elems.length; i++) {
-        System.out.println("        element " + (i+1) + ": " + elems[i]);
-      }
+    for (int i=0; i<elems.length; i++) {
+      System.out.println("        element " + (i+1) + ": " + elems[i]);
     }
   }
 
@@ -381,19 +370,12 @@ public class PrintHandler extends NullRecordHandler {
     System.out.println("    object id: " + objId);
     System.out.println("    stack trace serial num: " + stackTraceSerialNum);
     System.out.print("    number of elements: ");
-    if (elems != null) {
-      System.out.println(elems.length);
-    } else {
-      System.out.println("0");
-    }
+    System.out.println(elems.length);
     System.out.println("    element type: " + getBasicType(elemType));
   
-    if (elems != null) {
-      for (int i=0; i<elems.length; i++) {
-        System.out.println("        element " + (i+1) + ": " + elems[i]);
-      }
+    for (int i=0; i<elems.length; i++) {
+      System.out.println("        element " + (i+1) + ": " + elems[i]);
     }
-
   } 
 
 

@@ -59,14 +59,11 @@ public class StaticPrintHandler extends NullRecordHandler {
       System.exit(1);
     }
     
-    if (statics != null) {
-      for (Static s: statics) {
-        if (s.value.type == Type.OBJ) {
-          System.out.println("Static, " + cls.className + ", " + stringMap.get(s.staticFieldNameStringId));
-        }
+    for (Static s: statics) {
+      if (s.value.type == Type.OBJ) {
+        System.out.println("Static, " + cls.className + ", " + stringMap.get(s.staticFieldNameStringId));
       }
-    }
-        
+    }        
   }
   
 }
