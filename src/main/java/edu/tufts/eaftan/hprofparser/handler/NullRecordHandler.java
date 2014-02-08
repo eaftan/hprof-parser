@@ -132,7 +132,7 @@ public class NullRecordHandler implements RecordHandler {
 
   @Override
   public void instanceDump(long objId, int stackTraceSerialNum, 
-      long classObjId, Value[] instanceFieldValues) {}
+      long classObjId, Value<?>[] instanceFieldValues) {}
 
   @Override
   public void objArrayDump(long objId, int stackTraceSerialNum, 
@@ -140,7 +140,7 @@ public class NullRecordHandler implements RecordHandler {
 
   @Override
   public void primArrayDump(long objId, int stackTraceSerialNum, 
-      byte elemType, Value[] elems) {}
+      byte elemType, Value<?>[] elems) {}
 
   
   /* handler for end of file */

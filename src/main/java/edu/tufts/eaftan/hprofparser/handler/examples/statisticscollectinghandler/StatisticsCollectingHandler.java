@@ -64,7 +64,7 @@ public class StatisticsCollectingHandler extends NullRecordHandler {
 
   @Override
   public void instanceDump(long objId, int stackTraceSerialNum, long classObjId,
-      Value[] instanceFieldValues) {
+      Value<?>[] instanceFieldValues) {
     ClassInfo classInfo = (ClassInfo) classMap.get(classObjId);
     classInfo.instanceCount++;
   }
@@ -77,7 +77,7 @@ public class StatisticsCollectingHandler extends NullRecordHandler {
   }
 
   @Override
-  public void primArrayDump(long objId, int stackTraceSerialNum, byte hprofElemType, Value[] elems) {
+  public void primArrayDump(long objId, int stackTraceSerialNum, byte hprofElemType, Value<?>[] elems) {
     Type elemType = Type.hprofTypeToEnum(hprofElemType);
     String typeDescriptor = "[" + elemType.toString();
     int length = elems != null ? elems.length : 0;  

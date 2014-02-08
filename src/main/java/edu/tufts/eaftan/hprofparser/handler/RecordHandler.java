@@ -100,13 +100,13 @@ public interface RecordHandler {
       InstanceField[] instanceFields);
 
   public abstract void instanceDump(long objId, int stackTraceSerialNum, long classObjId,
-      Value[] instanceFieldValues);
+      Value<?>[] instanceFieldValues);
 
   public abstract void objArrayDump(long objId, int stackTraceSerialNum, long elemClassObjId,
       long[] elems);
 
   public abstract void primArrayDump(long objId, int stackTraceSerialNum, byte elemType,
-      Value[] elems);
+      Value<?>[] elems);
 
   public abstract void finished();
 

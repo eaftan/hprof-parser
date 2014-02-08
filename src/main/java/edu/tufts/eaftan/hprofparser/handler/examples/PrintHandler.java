@@ -325,7 +325,7 @@ public class PrintHandler extends NullRecordHandler {
 
   @Override
   public void instanceDump(long objId, int stackTraceSerialNum, 
-      long classObjId, Value[] instanceFieldValues) {
+      long classObjId, Value<?>[] instanceFieldValues) {
     System.out.println("Instance Dump:");
     System.out.println("    object id: " + objId);
     System.out.println("    stack trace serial num: " + stackTraceSerialNum);
@@ -365,7 +365,7 @@ public class PrintHandler extends NullRecordHandler {
 
   @Override
   public void primArrayDump(long objId, int stackTraceSerialNum, 
-      byte elemType, Value[] elems) {
+      byte elemType, Value<?>[] elems) {
     System.out.println("Primitive Array Dump:");
     System.out.println("    object id: " + objId);
     System.out.println("    stack trace serial num: " + stackTraceSerialNum);

@@ -72,7 +72,7 @@ public class NonNullTest {
 
     @Override
     public void instanceDump(long objId, int stackTraceSerialNum, long classObjId,
-        Value[] instanceFieldValues) {
+        Value<?>[] instanceFieldValues) {
       assertThat(instanceFieldValues, notNullValue());
     }
 
@@ -83,7 +83,7 @@ public class NonNullTest {
     }
 
     @Override
-    public void primArrayDump(long objId, int stackTraceSerialNum, byte elemType, Value[] elems) {
+    public void primArrayDump(long objId, int stackTraceSerialNum, byte elemType, Value<?>[] elems) {
       assertThat(elems, notNullValue());
     }    
   };
