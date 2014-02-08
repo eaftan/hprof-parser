@@ -536,7 +536,7 @@ public class HprofParser {
          * its superclasses.  So we need to store class records in a hash 
          * table.
          */
-        classMap.put(l1, new ClassInfo(l1, l2, i2, instanceFields, null));
+        classMap.put(l1, new ClassInfo(l1, l2, i2, instanceFields));
 
         handler.classDump(l1, i1, l2, l3, l4, l5, l6, l7, i2, constants,
             statics, instanceFields); 

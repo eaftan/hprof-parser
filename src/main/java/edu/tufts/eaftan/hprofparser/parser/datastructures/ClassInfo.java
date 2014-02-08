@@ -22,17 +22,15 @@ public class ClassInfo {
   public long superClassObjId;
   public int instanceSize;
   public InstanceField[] instanceFields;
-  public String className;
   
   public ClassInfo() {}
 
   public ClassInfo(long classObjId, long superClassObjId, int instanceSize, 
-      InstanceField[] instanceFields, String className) {
+      InstanceField[] instanceFields) {
     this.classObjId = classObjId;
     this.superClassObjId = superClassObjId;
     this.instanceSize = instanceSize;
     this.instanceFields = instanceFields;
-    this.className = className;
   }
 
 }

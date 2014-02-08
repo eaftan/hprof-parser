@@ -16,11 +16,11 @@
 
 package edu.tufts.eaftan.hprofparser.handler.examples;
 
-import edu.tufts.eaftan.hprofparser.handler.NullRecordHandler;
+import edu.tufts.eaftan.hprofparser.parser.datastructures.ClassInfo;
 
+import edu.tufts.eaftan.hprofparser.handler.NullRecordHandler;
 import edu.tufts.eaftan.hprofparser.parser.datastructures.AllocSite;
 import edu.tufts.eaftan.hprofparser.parser.datastructures.CPUSample;
-import edu.tufts.eaftan.hprofparser.parser.datastructures.ClassInfo;
 import edu.tufts.eaftan.hprofparser.parser.datastructures.Constant;
 import edu.tufts.eaftan.hprofparser.parser.datastructures.InstanceField;
 import edu.tufts.eaftan.hprofparser.parser.datastructures.Static;
@@ -37,7 +37,7 @@ public class PrintHandler extends NullRecordHandler {
 
   private HashMap<Long, String> stringMap = new HashMap<Long, String>();
   private HashMap<Long, ClassInfo> classMap = new HashMap<Long, ClassInfo>();
-
+  
   /* handler for file header */
   
   @Override
@@ -320,7 +320,7 @@ public class PrintHandler extends NullRecordHandler {
     
     // store class info in a hashmap for later access
     classMap.put(classObjId, new ClassInfo(classObjId, superClassObjId, instanceSize,
-        instanceFields, null));
+        instanceFields));
   }
 
   @Override

@@ -17,8 +17,6 @@
 package edu.tufts.eaftan.hprofparser.handler.examples;
 
 import edu.tufts.eaftan.hprofparser.handler.NullRecordHandler;
-
-import edu.tufts.eaftan.hprofparser.parser.datastructures.ClassInfo;
 import edu.tufts.eaftan.hprofparser.parser.datastructures.Constant;
 import edu.tufts.eaftan.hprofparser.parser.datastructures.InstanceField;
 import edu.tufts.eaftan.hprofparser.parser.datastructures.Static;
@@ -31,6 +29,13 @@ public class StaticPrintHandler extends NullRecordHandler {
   private HashMap<Long, String> stringMap = new HashMap<Long, String>();
   private HashMap<Long, ClassInfo> classMap = new HashMap<Long, ClassInfo>();
   
+  private static class ClassInfo {
+    public final String name;
+    public ClassInfo(String name) {
+      this.name = name;
+    }
+  }
+  
   @Override
   public void stringInUTF8(long id, String data) {
     // store string for later lookup
@@ -40,9 +45,7 @@ public class StaticPrintHandler extends NullRecordHandler {
   @Override
   public void loadClass(int classSerialNum, long classObjId, 
       int stackTraceSerialNum, long classNameStringId) {
-    ClassInfo cls = new ClassInfo();
-    cls.classObjId = classObjId;
-    cls.className = stringMap.get(classNameStringId);
+    ClassInfo cls = new ClassInfo(stringMap.get(classNameStringId));
     classMap.put(classObjId, cls);
   }
 
@@ -61,7 +64,7 @@ public class StaticPrintHandler extends NullRecordHandler {
     
     for (Static s: statics) {
       if (s.value.type == Type.OBJ) {
-        System.out.println("Static, " + cls.className + ", " + stringMap.get(s.staticFieldNameStringId));
+        System.out.println("Static, " + cls.name + ", " + stringMap.get(s.staticFieldNameStringId));
       }
     }        
   }
