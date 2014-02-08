@@ -20,14 +20,11 @@ import java.util.Map;
 /**
  * Computes basic statistics about a heap dump.  For example, the number of instances of each
  * type and the total bytes used by instances of that type.
+ * 
+ * <p>Note that we intentionally ignore array and object header sizes because they are VM
+ * dependent.
  */
 public class StatisticsCollectingHandler extends NullRecordHandler {
-  
-  // TODO(eaftan): Use more accurate values.  Correct values are in 
-  // hotspot/src/share/vm/oops/markOop.hpp and trunk/hotspot/src/share/vm/oops/arrayOop.hpp.
-  private static final int OBJECT_HEADER_SIZE_BYTES = 4;
-  private static final int ARRAY_HEADER_SIZE_BYTES = OBJECT_HEADER_SIZE_BYTES + 4;
-  
   private Map<Long, TypeInfo> classMap = new HashMap<>();
   private Map<Long, String> stringMap = new HashMap<>();
   private Map<String, TypeInfo> arrayInfoMap = new HashMap<>();
@@ -41,8 +38,7 @@ public class StatisticsCollectingHandler extends NullRecordHandler {
   public void loadClass(int classSerialNum, long classObjId, int stackTraceSerialNum,
       long classNameStringId) {
     ClassInfo classInfo = new ClassInfo();
-    String className = stringMap.get(classNameStringId);
-    classInfo.className = className;
+    classInfo.className = stringMap.get(classNameStringId);
     classMap.put(classObjId, classInfo);
   }
   
@@ -51,14 +47,8 @@ public class StatisticsCollectingHandler extends NullRecordHandler {
       long classLoaderObjId, long signersObjId, long protectionDomainObjId, long reserved1,
       long reserved2, int instanceSize, Constant[] constants, Static[] statics,
       InstanceField[] instanceFields) {
-    int size = OBJECT_HEADER_SIZE_BYTES;
-    if (instanceFields != null) {
-      for (InstanceField field : instanceFields) {
-        size += field.type.sizeInBytes();
-      }
-    }
     ClassInfo classInfo = (ClassInfo) classMap.get(classObjId);
-    classInfo.instanceSize = size;
+    classInfo.instanceSize = instanceSize;
   }
 
 
@@ -73,7 +63,7 @@ public class StatisticsCollectingHandler extends NullRecordHandler {
   public void objArrayDump(long objId, int stackTraceSerialNum, long elemClassObjId, long[] elems) {
     String typeDescriptor = "[" + classMap.get(elemClassObjId).className;
     int length = elems != null ? elems.length : 0;  
-    recordArrayInstance(typeDescriptor, ARRAY_HEADER_SIZE_BYTES + length * Type.OBJ.sizeInBytes());
+    recordArrayInstance(typeDescriptor, length * Type.OBJ.sizeInBytes());
   }
 
   @Override
@@ -81,7 +71,7 @@ public class StatisticsCollectingHandler extends NullRecordHandler {
     Type elemType = Type.hprofTypeToEnum(hprofElemType);
     String typeDescriptor = "[" + elemType.toString();
     int length = elems != null ? elems.length : 0;  
-    recordArrayInstance(typeDescriptor, ARRAY_HEADER_SIZE_BYTES + length * elemType.sizeInBytes());
+    recordArrayInstance(typeDescriptor, length * elemType.sizeInBytes());
   }
 
   private void recordArrayInstance(String typeDescriptor, int bytes) {
