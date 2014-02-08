@@ -1,3 +1,19 @@
+/*
+ * Copyright 2014 Edward Aftandilian. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package edu.tufts.eaftan.hprofparser.handler.examples.statisticscollectinghandler;
 
 import com.google.common.primitives.Ints;
@@ -21,8 +37,10 @@ import java.util.Map;
  * Computes basic statistics about a heap dump.  For example, the number of instances of each
  * type and the total bytes used by instances of that type.
  * 
- * <p>Note that we intentionally ignore array and object header sizes because they are VM
- * dependent.
+ * <p>Note that this is nowhere near accurate.  We intentionally ignore array and object header 
+ * sizes because they are VM dependent.  We also don't know how the fields were laid out, what the
+ * alignment was, whether OOPs were compressed, etc.  There's no way to get this right without 
+ * knowing details about the VM & options that produced it.
  */
 public class StatisticsCollectingHandler extends NullRecordHandler {
   private Map<Long, TypeInfo> classMap = new HashMap<>();
