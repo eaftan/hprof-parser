@@ -23,8 +23,6 @@ public class ClassInfo {
   public int instanceSize;
   public InstanceField[] instanceFields;
   
-  public ClassInfo() {}
-
   public ClassInfo(long classObjId, long superClassObjId, int instanceSize, 
       InstanceField[] instanceFields) {
     this.classObjId = classObjId;
