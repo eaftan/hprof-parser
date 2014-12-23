@@ -27,10 +27,7 @@ import edu.tufts.eaftan.hprofparser.handler.RecordHandler;
 import edu.tufts.eaftan.hprofparser.handler.examples.statisticscollectinghandler.StatisticsCollectingHandler;
 import edu.tufts.eaftan.hprofparser.parser.HprofParser;
 
-import java.io.BufferedInputStream;
-import java.io.DataInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -71,10 +68,7 @@ public class AllExampleHandlersTest {
     
     for (RecordHandler handler : ALL_HANDLERS) {
       HprofParser parser = new HprofParser(handler);
-      FileInputStream fs = new FileInputStream(testFilePath);
-      DataInputStream in = new DataInputStream(new BufferedInputStream(fs));
-      parser.parse(in);
-      in.close();
+      parser.parse(new File(testFilePath));
     }
   }
 
