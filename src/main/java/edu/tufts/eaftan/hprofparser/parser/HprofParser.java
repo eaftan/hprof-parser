@@ -142,7 +142,7 @@ public class HprofParser {
     
     // otherwise propagate the EOFException
     int time = in.readInt();    // TODO(eaftan): we might want time passed to handler fns
-    int bytesLeft = in.readInt();
+    long bytesLeft = Integer.toUnsignedLong(in.readInt());
 
     long l1, l2, l3, l4;
     int i1, i2, i3, i4, i5, i6, i7, i8, i9;
@@ -157,7 +157,7 @@ public class HprofParser {
         // String in UTF-8
         l1 = readId(idSize, in);
         bytesLeft -= idSize;
-        bArr1 = new byte[bytesLeft];
+        bArr1 = new byte[(int) bytesLeft];
         in.readFully(bArr1);
         if (isFirstPass) {
           handler.stringInUTF8(l1, new String(bArr1));
@@ -202,7 +202,7 @@ public class HprofParser {
         i2 = in.readInt();
         i3 = in.readInt();
         bytesLeft -= 12;
-        lArr1 = new long[bytesLeft/idSize];
+        lArr1 = new long[(int) bytesLeft/idSize];
         for (int i=0; i<lArr1.length; i++) {
           lArr1[i] = readId(idSize, in);
         }
